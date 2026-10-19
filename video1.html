@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Valthorum - Video 1</title>
+  
+  <!-- Fuentes Google Fonts para estética mística y legible -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #050608;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+    }
+
+    /* Contenedor estricto 9:16 optimizado para tablet y móvil */
+    .viewport-9-16 {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 56.25vh; /* Proporción 9:16 relativa a la altura */
+      max-height: 100vh;
+      background: #000;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Video de fondo continuo en bucle */
+    .bg-video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
+
+    /* Filtro degradado para contraste y legibilidad */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(
+        180deg, 
+        rgba(5, 7, 10, 0.78) 0%, 
+        rgba(8, 12, 18, 0.52) 35%, 
+        rgba(5, 7, 10, 0.3) 65%, 
+        rgba(3, 4, 6, 0.88) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Marca superior sutil */
+    .brand-tag {
+      position: absolute;
+      top: 5.5%;
+      width: 100%;
+      text-align: center;
+      z-index: 3;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.35em;
+      font-size: 0.85rem;
+      color: rgba(220, 200, 150, 0.7);
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    /* Área central de textos */
+    .content-area {
+      position: absolute;
+      top: 14%;
+      bottom: 30%;
+      left: 7%;
+      right: 7%;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    /* Bloques de texto individuales */
+    .slide {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .title-highlight {
+      font-family: 'Cinzel', serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #f7e7be;
+      text-shadow: 0 2px 18px rgba(247, 231, 190, 0.25), 0 4px 10px rgba(0, 0, 0, 0.9);
+      letter-spacing: 0.03em;
+    }
+
+    .body-text {
+      font-size: 1.15rem;
+      line-height: 1.55;
+      font-weight: 400;
+      color: #F0F2F5;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    }
+
+    /* Caja especial de llamado a la acción (Slide 4) */
+    .cta-box {
+      margin-top: 10px;
+      padding: 16px 20px;
+      background: rgba(18, 22, 28, 0.82);
+      border: 1px solid rgba(212, 175, 55, 0.55);
+      border-radius: 14px;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.2), inset 0 0 15px rgba(212, 175, 55, 0.1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      animation: pulseGlow 2.5s infinite alternate ease-in-out;
+    }
+
+    .keyword {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #ffd875;
+      letter-spacing: 0.12em;
+      margin: 6px 0;
+      text-shadow: 0 0 15px rgba(255, 216, 117, 0.6);
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 0 18px rgba(212, 175, 55, 0.15);
+        border-color: rgba(212, 175, 55, 0.4);
+      }
+      100% {
+        box-shadow: 0 0 32px rgba(212, 175, 55, 0.45);
+        border-color: rgba(255, 224, 130, 0.8);
+      }
+    }
+
+    /* Pantalla inicial con Botón INICIAR y Cuenta Regresiva */
+    .start-screen {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      background: rgba(4, 5, 8, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .start-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .btn-start {
+      padding: 18px 46px;
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: #0b0d11;
+      background: linear-gradient(135deg, #e4c478, #caa34a, #f7e6b5);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 25px rgba(202, 163, 74, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-start:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 15px rgba(202, 163, 74, 0.3);
+    }
+
+    .countdown-display {
+      display: none;
+      font-family: 'Cinzel', serif;
+      font-size: 5.5rem;
+      font-weight: 900;
+      color: #ffd875;
+      text-shadow: 0 0 35px rgba(255, 216, 117, 0.7);
+      animation: scaleBeat 1s infinite ease-in-out;
+    }
+
+    @keyframes scaleBeat {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport-9-16" id="playerContainer">
+    <!-- Video con ruta relativa y bucle -->
+    <video class="bg-video" id="videoFondo" muted loop playsinline preload="auto">
+      <source src="fondo1.mp4" type="video/mp4">
+      Tu navegador no soporta videos HTML5.
+    </video>
+
+    <!-- Capa de oscurecimiento -->
+    <div class="overlay"></div>
+
+    <!-- Marca de agua / proyecto -->
+    <div class="brand-tag" id="brandTag">VALTHORUM</div>
+
+    <!-- Contenedor de Textos -->
+    <div class="content-area">
+      
+      <!-- Bloque 1: El Gancho (0s - 6s) -->
+      <div class="slide" id="slide1">
+        <h1 class="title-highlight">¿Sigues agotada aún después de descansar bien?</h1>
+      </div>
+
+      <!-- Bloque 2: La Causa Energética (6s - 14s) -->
+      <div class="slide" id="slide2">
+        <h2 class="title-highlight">Tu campo energético puede estar saturado</h2>
+        <p class="body-text">Cargas densas y bloqueos invisibles se acumulan a diario en tu aura sin que te des cuenta.</p>
+      </div>
+
+      <!-- Bloque 3: La Necesidad (14s - 22s) -->
+      <div class="slide" id="slide3">
+        <p class="body-text">Aunque duermas, comas bien o te relajes, seguirás sintiendo ese peso.</p>
+        <h2 class="title-highlight">Necesitas una limpieza energética profunda</h2>
+        <p class="body-text">Para liberar esa densidad y recuperar tu vitalidad.</p>
+      </div>
+
+      <!-- Bloque 4: Llamado a la Acción / DM (22s - 30s) -->
+      <div class="slide" id="slide4">
+        <h2 class="title-highlight">¿Quieres saber cómo limpiar tu energía hoy mismo?</h2>
+        <div class="cta-box">
+          <p class="body-text">Envía por mensaje interno la palabra:</p>
+          <div class="keyword">LIMPIEZA</div>
+          <p class="body-text" style="font-size: 0.95rem; opacity: 0.85;">y te explicaré cómo hacerlo.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Pantalla de Inicio y Cuenta Regresiva -->
+    <div class="start-screen" id="startScreen">
+      <button class="btn-start" id="btnStart">INICIAR</button>
+      <div class="countdown-display" id="countdownDisplay">4</div>
+    </div>
+  </div>
+
+  <script>
+    // Configuración de ruta dinámica (modificable si en el futuro cambias de carpeta)
+    const VIDEO_PATH = "fondo1.mp4";
+
+    const btnStart = document.getElementById('btnStart');
+    const startScreen = document.getElementById('startScreen');
+    const countdownDisplay = document.getElementById('countdownDisplay');
+    const videoFondo = document.getElementById('videoFondo');
+    const brandTag = document.getElementById('brandTag');
+    const container = document.getElementById('playerContainer');
+
+    const slides = [
+      document.getElementById('slide1'),
+      document.getElementById('slide2'),
+      document.getElementById('slide3'),
+      document.getElementById('slide4')
+    ];
+
+    // Tiempos exactos para cada bloque (en milisegundos a partir del segundo 0)
+    const TIMINGS = [
+      { start: 0,     end: 6000,  slideIndex: 0 }, // 0s a 6s
+      { start: 6000,  end: 14000, slideIndex: 1 }, // 6s a 14s
+      { start: 14000, end: 22000, slideIndex: 2 }, // 14s a 22s
+      { start: 22000, end: 30000, slideIndex: 3 }  // 22s a 30s
+    ];
+
+    btnStart.addEventListener('click', async () => {
+      // 1. Activar Pantalla Completa nativa (ideal para la tablet)
+      if (document.documentElement.requestFullscreen) {
+        try {
+          await document.documentElement.requestFullscreen();
+        } catch (err) {
+          console.warn("Fullscreen no permitido o denegado:", err);
+        }
+      }
+
+      // Asegurar fuente de video
+      if (!videoFondo.getAttribute('src')) {
+        videoFondo.src = VIDEO_PATH;
+      }
+
+      // 2. Iniciar cuenta regresiva de 4 segundos
+      btnStart.style.display = 'none';
+      countdownDisplay.style.display = 'block';
+
+      let count = 4;
+      countdownDisplay.textContent = count;
+
+      const countdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownDisplay.textContent = count;
+        } else {
+          clearInterval(countdownTimer);
+          arrancarSecuencia();
+        }
+      }, 1000);
+    });
+
+    function arrancarSecuencia() {
+      // Ocultar pantalla de preparación
+      startScreen.classList.add('hidden');
+      brandTag.style.opacity = '1';
+
+      // Reproducir video en bucle
+      videoFondo.play();
+
+      // Programar la aparición de cada bloque de texto
+      TIMINGS.forEach(timing => {
+        // Momento de entrada
+        setTimeout(() => {
+          slides.forEach(s => s.classList.remove('active'));
+          slides[timing.slideIndex].classList.add('active');
+        }, timing.start);
+
+        // Momento de salida
+        setTimeout(() => {
+          slides[timing.slideIndex].classList.remove('active');
+        }, timing.end);
+      });
+
+      // Al cumplirse los 30 segundos, mantener el CTA visible o reiniciar si deseas
+      setTimeout(() => {
+        slides[3].classList.add('active'); // Mantiene el llamado a la acción fijado al final
+      }, 30000);
+    }
+  </script>
+</body>
+</html>
