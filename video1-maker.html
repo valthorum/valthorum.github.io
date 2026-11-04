@@ -1,0 +1,397 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Video 1 - Productor 9:16</title>
+  <!-- Tailwind CSS para utilidades y maquetación -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Montserrat / Inter para subtítulos de alto impacto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;0,900;1,800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #ffffff;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .font-impact {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Animación Ken Burns suave para imágenes de fondo */
+    @keyframes kenBurns {
+      0% {
+        transform: scale(1.0) translate(0, 0);
+      }
+      50% {
+        transform: scale(1.08) translate(-1%, -1%);
+      }
+      100% {
+        transform: scale(1.15) translate(1%, 0.5%);
+      }
+    }
+
+    .ken-burns {
+      animation: kenBurns 18s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    /* Resplandor y sombra dura para asegurar legibilidad sobre cualquier fondo */
+    .text-stroke-viral {
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.95),
+        0 6px 16px rgba(0, 0, 0, 0.8),
+        0 0 24px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Transición suave de entrada para los subtítulos */
+    @keyframes captionPop {
+      0% {
+        opacity: 0;
+        transform: translateY(8px) scale(0.97);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .caption-anim {
+      animation: captionPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="w-screen h-screen flex items-center justify-center m-0 p-0 select-none bg-black">
+
+  <!-- Elemento de Audio Nativo Sincronizado -->
+  <audio id="narracionAudio" preload="auto">
+    <source src="./video1-voz.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- CONTENEDOR MAESTRO 9:16 -->
+  <!-- En tablet u ordenador se centra en proporción 9:16 estricta; en móviles verticales llena el viewport -->
+  <main id="stage" class="relative w-full h-full max-w-[56.25vh] max-h-screen aspect-[9/16] overflow-hidden bg-neutral-950 shadow-2xl flex flex-col justify-between">
+
+    <!-- CAPA 1: IMÁGENES DE FONDO (CROSS-FADE CONTINUO) -->
+    <div id="bgLayer" class="absolute inset-0 z-0 overflow-hidden bg-black pointer-events-none">
+      <!-- Imagen 1 -->
+      <img id="img1" src="./video1-1.jpg" alt="Estado inicial" 
+           class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 ken-burns"
+           onerror="this.src='https://placehold.co/1080x1920/1e293b/94a3b8?text=video1-1.jpg'">
+      <!-- Imagen 2 -->
+      <img id="img2" src="./video1-2.jpg" alt="Aislamiento" 
+           class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 ken-burns"
+           onerror="this.src='https://placehold.co/1080x1920/334155/cbd5e1?text=video1-2.jpg'">
+      <!-- Imagen 3 -->
+      <img id="img3" src="./video1-3.jpg" alt="Alivio energético" 
+           class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 ken-burns"
+           onerror="this.src='https://placehold.co/1080x1920/064e3b/6ee7b7?text=video1-3.jpg'">
+      <!-- Imagen 4 -->
+      <img id="img4" src="./video1-4.jpg" alt="Claridad y brillo" 
+           class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0 ken-burns"
+           onerror="this.src='https://placehold.co/1080x1920/14532d/86efac?text=video1-4.jpg'">
+    </div>
+
+    <!-- CAPA 2: VIÑETA CINEMÁTICA Y GRADIENTES PARA MEJOR CONTRASTE -->
+    <div class="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/85 via-black/25 to-black/40"></div>
+
+    <!-- CAPA 3: INDICADOR DISCRETO DE PROGRESO (SUPERIOR) -->
+    <div class="relative z-20 w-full px-6 pt-6 flex items-center justify-between opacity-40 hover:opacity-100 transition-opacity">
+      <div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
+        <div id="progressBar" class="h-full bg-amber-400 w-0 transition-all duration-100 rounded-full"></div>
+      </div>
+      <span id="timeCounter" class="text-xs font-mono ml-3 text-white/80 tabular-nums">00:00</span>
+    </div>
+
+    <!-- CAPA 4: ÁREA DE CLOSED CAPTIONS (ZONA SEGURA VIRAL) -->
+    <!-- Ubicado estratégicamente a 26%-30% del borde inferior para evitar iconos laterales de TikTok/Reels y títulos inferiores -->
+    <div class="relative z-30 w-full px-7 pb-44 flex flex-col items-center justify-end text-center pointer-events-none min-h-[220px]">
+      <div id="captionBox" class="inline-block max-w-[92%] px-5 py-3 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 shadow-2xl transition-all duration-200">
+        <p id="captionText" class="font-impact text-2xl sm:text-3xl font-extrabold uppercase leading-snug tracking-wide text-white text-stroke-viral">
+          ...
+        </p>
+      </div>
+    </div>
+
+    <!-- CAPA 5: PANTALLA INICIAL DE CONFIGURACIÓN Y BOTÓN DE INICIO -->
+    <div id="startScreen" class="absolute inset-0 z-50 bg-black/90 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center transition-opacity duration-500">
+      <div class="w-20 h-20 rounded-3xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center mb-6 shadow-lg shadow-amber-500/10">
+        <svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+
+      <h1 class="text-3xl font-black text-white uppercase tracking-tight mb-2">Video 1: Productor</h1>
+      <p class="text-sm text-neutral-400 max-w-xs mb-8">
+        Al presionar el botón se activará la pantalla completa y tendrás <span class="text-amber-400 font-bold">5 segundos</span> para encender el grabador antes de iniciar.
+      </p>
+
+      <button id="startBtn" class="w-full max-w-xs py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-neutral-950 font-black text-lg tracking-wider uppercase shadow-xl shadow-amber-500/25 active:scale-95 transition-all">
+        Iniciar Grabación
+      </button>
+
+      <p class="mt-6 text-xs text-neutral-500">Formato Vertical 9:16 • Sincronización Automática</p>
+    </div>
+
+    <!-- CAPA 6: CUENTA REGRESIVA DE 5 SEGUNDOS (PRE-GRABACIÓN) -->
+    <div id="countdownScreen" class="absolute inset-0 z-40 bg-black flex flex-col items-center justify-center hidden pointer-events-none">
+      <div class="text-neutral-400 uppercase tracking-widest text-sm font-semibold mb-3">Iniciando en...</div>
+      <div id="countdownNumber" class="text-9xl font-black text-amber-400 font-mono animate-pulse">5</div>
+      <div class="text-neutral-500 text-xs mt-6">Prepara el grabador de pantalla</div>
+    </div>
+
+    <!-- CAPA 7: PANTALLA FINAL (55s) -->
+    <div id="endScreen" class="absolute inset-0 z-50 bg-black flex flex-col items-center justify-center p-8 text-center opacity-0 pointer-events-none transition-opacity duration-1000">
+      <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center mb-4">
+        <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-black text-white uppercase tracking-wider mb-2">Pausa para Cierre</h2>
+      <p class="text-sm text-neutral-400 max-w-xs mb-8">
+        Fin de la narración (55s). Aquí concluye el bloque de imágenes para dar paso al clip del maguito.
+      </p>
+      <button id="restartBtn" class="py-3 px-8 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-white font-bold text-sm tracking-wide transition-all border border-neutral-700">
+        Reiniciar Presentación
+      </button>
+    </div>
+
+    <!-- CONTROLES AUXILIARES MINIMALISTAS (SUPERIORES DERECHOS) -->
+    <div class="absolute top-4 right-4 z-40 flex items-center space-x-2">
+      <button id="toggleFullscreenBtn" title="Pantalla Completa" class="p-2.5 rounded-full bg-black/40 hover:bg-black/80 text-white/70 hover:text-white backdrop-blur-md border border-white/10 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+        </svg>
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    // --- DATOS Y TIEMPOS EXACTOS DEL LIBRETO ---
+    const TOTAL_DURATION = 55.0; // Duración total en segundos
+
+    // Transiciones de imágenes de fondo
+    const imageTimeline = [
+      { id: 'img1', start: 0.0, end: 15.5 },
+      { id: 'img2', start: 15.5, end: 27.5 },
+      { id: 'img3', start: 27.5, end: 40.5 },
+      { id: 'img4', start: 40.5, end: 55.0 }
+    ];
+
+    // Subtítulos sincronizados palabra por palabra / bloque de impacto
+    const captionTimeline = [
+      { start: 0.0, end: 4.0, text: 'Comía bien, dormía mis horas completas...' },
+      { start: 4.0, end: 8.0, text: '...pero las ideas <span class="text-amber-400">dejaron de fluir</span>.' },
+      { start: 8.0, end: 15.5, text: 'En mi trabajo sentía un <span class="text-rose-400">estancamiento total</span> y una pesadez constante.' },
+      { start: 15.5, end: 20.0, text: 'Fui al médico y físicamente todo estaba en orden.' },
+      { start: 20.0, end: 23.0, text: 'Sin embargo, sentía una <span class="text-sky-300">barrera invisible</span>...' },
+      { start: 23.0, end: 27.5, text: 'La gente se fue distanciando; sentía que <span class="text-neutral-400">cargaba el ambiente</span>.' },
+      { start: 27.5, end: 32.0, text: 'Decidí hacerme una <span class="text-emerald-400">limpieza energética</span>: el cambio fue instantáneo.' },
+      { start: 32.0, end: 37.0, text: 'Fue como quitarme un <span class="text-emerald-300">morral gigante</span> de la espalda...' },
+      { start: 37.0, end: 40.5, text: '...mi cuerpo se sintió liviano y respiré una <span class="text-teal-300">paz profunda</span>.' },
+      { start: 40.5, end: 44.0, text: 'Volvió la <span class="text-amber-300">claridad</span> a mi mente...' },
+      { start: 44.0, end: 48.0, text: '...destrabé proyectos estancados por semanas...' },
+      { start: 48.0, end: 51.0, text: '...y la gente volvió a acercarse a mí.' },
+      { start: 51.0, end: 55.0, text: 'Hoy <span class="text-emerald-400">descanso de verdad</span> y recuperé mi energía.' }
+    ];
+
+    // Elementos DOM
+    const audio = document.getElementById('narracionAudio');
+    const startScreen = document.getElementById('startScreen');
+    const startBtn = document.getElementById('startBtn');
+    const countdownScreen = document.getElementById('countdownScreen');
+    const countdownNumber = document.getElementById('countdownNumber');
+    const endScreen = document.getElementById('endScreen');
+    const restartBtn = document.getElementById('restartBtn');
+    const captionText = document.getElementById('captionText');
+    const captionBox = document.getElementById('captionBox');
+    const progressBar = document.getElementById('progressBar');
+    const timeCounter = document.getElementById('timeCounter');
+    const toggleFullscreenBtn = document.getElementById('toggleFullscreenBtn');
+
+    let isRunning = false;
+    let fallbackTimer = null;
+    let startTime = 0;
+    let currentCaptionIndex = -1;
+    let currentImageId = '';
+
+    // Manejador de Pantalla Completa nativo
+    function requestFullScreenMode() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen().catch(() => {});
+      } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+      } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
+      }
+    }
+
+    // Formateador de segundos a mm:ss
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Iniciar secuencia completa con cuenta regresiva
+    startBtn.addEventListener('click', () => {
+      requestFullScreenMode();
+      startScreen.classList.add('opacity-0', 'pointer-events-none');
+      
+      // Mostrar cuenta regresiva de 5 segundos
+      countdownScreen.classList.remove('hidden');
+      let count = 5;
+      countdownNumber.textContent = count;
+
+      const countdownInterval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownNumber.textContent = count;
+        } else {
+          clearInterval(countdownInterval);
+          countdownScreen.classList.add('hidden');
+          iniciarReproduccion();
+        }
+      }, 1000);
+    });
+
+    // Arranque de medios y bucle de tiempo
+    function iniciarReproduccion() {
+      isRunning = true;
+      currentCaptionIndex = -1;
+      currentImageId = '';
+      endScreen.classList.add('opacity-0', 'pointer-events-none');
+      
+      // Intentar reproducir audio local
+      audio.currentTime = 0;
+      const playPromise = audio.play();
+
+      startTime = performance.now();
+
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.warn('Audio local no disponible o bloqueado por el navegador. Usando temporizador interno de sincronización.', error);
+        });
+      }
+
+      // Ciclo de animación a 60fps para precisión de tiempo
+      requestAnimationFrame(actualizarFotograma);
+    }
+
+    // Actualización de estado en tiempo real
+    function actualizarFotograma(now) {
+      if (!isRunning) return;
+
+      // Obtener el tiempo actual: prioriza el tiempo del audio si está sonando; si no, usa el reloj de alta precisión
+      let currentTime = 0;
+      if (!audio.paused && audio.currentTime > 0) {
+        currentTime = audio.currentTime;
+      } else {
+        currentTime = (now - startTime) / 1000;
+      }
+
+      // Actualizar barra de progreso y contador
+      const progressPercent = Math.min((currentTime / TOTAL_DURATION) * 100, 100);
+      progressBar.style.width = `${progressPercent}%`;
+      timeCounter.textContent = formatTime(Math.min(currentTime, TOTAL_DURATION));
+
+      // 1. Sincronización de Imágenes
+      for (const item of imageTimeline) {
+        if (currentTime >= item.start && currentTime < item.end) {
+          if (currentImageId !== item.id) {
+            cambiarImagen(item.id);
+          }
+          break;
+        }
+      }
+
+      // 2. Sincronización de Subtítulos
+      let activeCaption = null;
+      let activeIndex = -1;
+      for (let i = 0; i < captionTimeline.length; i++) {
+        const item = captionTimeline[i];
+        if (currentTime >= item.start && currentTime < item.end) {
+          activeCaption = item;
+          activeIndex = i;
+          break;
+        }
+      }
+
+      if (activeIndex !== -1) {
+        if (currentCaptionIndex !== activeIndex) {
+          currentCaptionIndex = activeIndex;
+          captionText.innerHTML = activeCaption.text;
+          captionBox.classList.remove('opacity-0');
+          captionText.classList.remove('caption-anim');
+          void captionText.offsetWidth; // Forzar reflujo DOM
+          captionText.classList.add('caption-anim');
+        }
+      } else {
+        if (currentTime >= TOTAL_DURATION) {
+          captionBox.classList.add('opacity-0');
+        }
+      }
+
+      // 3. Condición de finalización a los 55 segundos
+      if (currentTime >= TOTAL_DURATION) {
+        finalizarPresentacion();
+        return;
+      }
+
+      requestAnimationFrame(actualizarFotograma);
+    }
+
+    // Transición suave entre imágenes (Cross-Fade)
+    function cambiarImagen(targetId) {
+      currentImageId = targetId;
+      ['img1', 'img2', 'img3', 'img4'].forEach(id => {
+        const el = document.getElementById(id);
+        if (id === targetId) {
+          el.classList.remove('opacity-0');
+          el.classList.add('opacity-100');
+        } else {
+          el.classList.remove('opacity-100');
+          el.classList.add('opacity-0');
+        }
+      });
+    }
+
+    // Fin de la presentación
+    function finalizarPresentacion() {
+      isRunning = false;
+      audio.pause();
+      endScreen.classList.remove('pointer-events-none');
+      endScreen.classList.remove('opacity-0');
+      endScreen.classList.add('opacity-100');
+    }
+
+    // Reiniciar
+    restartBtn.addEventListener('click', () => {
+      endScreen.classList.add('opacity-0', 'pointer-events-none');
+      startScreen.classList.remove('opacity-0', 'pointer-events-none');
+    });
+
+    // Alternar pantalla completa manual
+    toggleFullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        requestFullScreenMode();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+```
